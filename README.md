@@ -25,7 +25,7 @@ And even if you're an experienced engineer, do you really want to spend an hour 
 
 **help**: Show this help
 
-### In Depth
+### Sub-Commands (In Depth)
 Let's explore each of the sub-commands.   
 
 #### Init
