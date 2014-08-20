@@ -5,21 +5,21 @@ HSC is an opinionated command line utility designed to get you writing code....q
 
 ## Usage
 
-* **init**: First time installing HSC
+**init**: First time installing HSC
 
-* **new**: Create a new project
+**new**: Create a new project
 
-* **fork**: Collaborate on an existing project
+**fork**: Collaborate on an existing project
 
-* **issues**: Manage project ideas, features, stories, and bugs
+**issues**: Manage project ideas, features, stories, and bugs
 
-* **info**: Display version of your local HSC install
+**info**: Display version of your local HSC install
 
-* **check**: Check for available updates for HSC
+**check**: Check for available updates for HSC
 
-* **download**: Updates to latest HSC version
+**download**: Updates to latest HSC version
 
-* **help**: Show this help
+**help**: Show this help
 
 ## In Depth
 Let's explore each of the sub-commands.   
