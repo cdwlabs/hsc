@@ -5,6 +5,10 @@ HSC (Hack Some Code) is an opinionated command line utility designed to get you 
 ## Why?
 If you new to software development, the whole process of choosing a lanuage, framework, design pattern, tooling, etc. can seem daunting.  Solving that problem or implementing that new idea quickly becomes unapproachable.
 
+And even if you're an experienced engineer, do you really want to spend an hour writing boilerplate before you can implement that proof-of-concept?
+
+## Approach
+
 ## Usage
 
 **init**: First time installing HSC
