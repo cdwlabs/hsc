@@ -1,7 +1,9 @@
-HSC: "Hack Some Code"
-===
+# HSC
 
-HSC is an opinionated command line utility designed to get you writing code....quickly!   
+HSC (Hack Some Code) is an opinionated command line utility designed to get you writing code....quickly!
+
+## Why?
+If you new to software development, the whole process of choosing a lanuage, framework, design pattern, tooling, etc. can seem daunting.  Solving that problem or implementing that new idea quickly becomes unapproachable.
 
 ## Usage
 
@@ -21,23 +23,23 @@ HSC is an opinionated command line utility designed to get you writing code....q
 
 **help**: Show this help
 
-## In Depth
+### In Depth
 Let's explore each of the sub-commands.   
 
-### Init
+#### Init
 This sub-command initializes a user's local installation with necessary configuration to streamline processing.  Storing a configuation locally will also eliminate the need to query for input that may be redundant across sub-commands.  GitHub repository information would be one example of the type of data that may be redundant across sub-commands
 
-### New
+#### New
 This sub-command creates a new project for a user.  The user would be able to select from a list of pre-defined starter projects.  These starter projects
 
-### Fork
+#### Fork
 
-### Issues
+#### Issues
 
-### Info
+#### Info
 
-### Check
+#### Check
 
-### Download
+#### Download
 
-### Help
+#### Help
