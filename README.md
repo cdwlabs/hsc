@@ -51,3 +51,39 @@ Updates to latest HSC version.
 
 #### Help
 Display some help message.
+
+## Status
+No real work has been completed on this yet.  Just identifiying high-level functionality.
+
+## To-Do's
+
+### init
+* Decide on file format for config (e.g. yaml, toml, json, ini).
+* Determine what to capture during init.
+
+### new
+* Select from available starter projects.
+* Provide option for creating repository in GitHub.
+
+### fork
+* Fork existing GitHub repository.
+* Clone locally and set up upstream remote for consistent fetch/merge workflow.
+
+### issues
+* Create a generic GitHub issue (with label support).
+* Import *.feature files.  Includes naming convention to prevent duplicates.
+* Evaluate ideas around git hook support.
+
+### info
+* Determine what to expose as version info.
+
+### check
+* Develop scheme to simplify version checking.
+* Leverage Bintray API?
+
+### download
+* Just an extension of "check" sub-command (ie call check first).
+* Develop a scheme to determine if backwards compatability is broken.
+
+### help
+* Should be easy...right?
