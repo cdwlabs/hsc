@@ -1,7 +1,5 @@
-HSC
+HSC: "Hack Some Code"
 ===
-
-"Hack Some Code"
 
 HSC is an opinionated command line utility designed to get you writing code....quickly!   
 
