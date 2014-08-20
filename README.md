@@ -29,7 +29,7 @@ And even if you're an experienced engineer, do you really want to spend an hour 
 Let's explore each of the sub-commands.   
 
 #### Init
-This sub-command initializes a user's local installation with necessary configuration to streamline processing.  Storing a configuation locally will also eliminate the need to query for input that may be redundant across sub-commands.  GitHub repository information would be one example of the type of data that may be redundant across sub-commands
+This sub-command initializes a user's local installation with necessary configuration to streamline processing.  Storing a configuation locally will also eliminate the need to query for input that may be redundant across sub-commands.  GitHub repository information would be one example of the type of data that may be redundant across sub-commands.
 
 #### New
 This sub-command creates a new project for a user.  The user would be able to select from a list of pre-defined starter projects ideally implemented in multiple languages.  A good example would be the customary "hello world" application implemented as a [microservice](http://martinfowler.com/articles/microservices.html).
