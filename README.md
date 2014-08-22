@@ -13,7 +13,7 @@ And even if you're an experienced engineer, do you really want to spend an hour 
 **new**: Create a new project   
 **fork**: Collaborate on an existing project   
 **issues**: Manage project ideas, features, stories, and bugs   
-**info**: Display version of your local HSC install   
+**version**: Display version of your local HSC install   
 **check**: Check for available updates for HSC   
 **download**: Updates to latest HSC version   
 **help**: Show this help
@@ -33,7 +33,7 @@ If you find an existing project you'd like to contribute to, this is the sub-com
 ##### Issues
 If you have a bug, enhancement, feature, etc. that you want to create for an existing project and don't feel like going to GitHub.  Additionally, this sub-command will allow you to "import" feature files as issues in GitHub. 
 
-##### Info
+##### Version 
 Display version of your local HSC install.  This includes both the semantic version number as well as Git information.
 
 ##### Check
@@ -67,7 +67,7 @@ No real work has been completed on this yet.  Just identifiying high-level funct
 * Import *.feature files.  Includes naming convention to prevent duplicates.
 * Evaluate ideas around git hook support.
 
-##### info
+##### version 
 * Determine what to expose as version info.
 
 ##### check
