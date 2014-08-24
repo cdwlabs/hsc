@@ -12,6 +12,10 @@ import (
 	"github.com/hashicorp/terraform/helper/multierror"
 	"github.com/mitchellh/go-homedir"
 	ini "github.com/rakyll/goini"
+
+	"net/http"
+
+	"code.google.com/p/goauth2/oauth"
 )
 
 // ConfigPathEnvVar identifies the environment variable that overrides the default location (i.e. user's home directory) of the HSC configuration file.
@@ -158,6 +162,30 @@ func getField(c *Config, field string) string {
 	r := reflect.ValueOf(c)
 	f := reflect.Indirect(r).FieldByName(field)
 	return string(f.String())
+}
+
+// HTTPClient returns an client built with Token. This client is suitable for OAuth authentication
+func (c *Config) HTTPClient() *http.Client {
+
+	t := &oauth.Transport{
+		Token: &oauth.Token{AccessToken: c.GetToken()},
+	}
+
+	return t.Client()
+}
+
+// GetToken returns the value of the user's GitHub Token environment variable or the user-supplied token value -- whichever was provided.
+func (c *Config) GetToken() string {
+
+	rtnval := c.Token
+	if c.Token == GitHubTokenEnvVar {
+		if envtoken := os.Getenv(GitHubTokenEnvVar); envtoken != "" {
+			rtnval = envtoken
+		} else {
+			rtnval = ""
+		}
+	}
+	return rtnval
 }
 
 func configDir() (string, error) {

@@ -7,10 +7,20 @@ If you are new to software development, the whole process of choosing a lanuage,
 
 And even if you're an experienced engineer, do you really want to spend an hour writing boilerplate before you can implement that proof-of-concept?
 
+## Background 
+The original premise was pretty simple.  I wanted to create a collection of small starter projects that engineers could use to quickly implement an idea or solve a problem.  With the technologies currently available (e.g. [Vagrant](http://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org/), and [Docker](https://www.docker.com/)), I felt it was feasible to create a developer environment that was consistent across operating systems, [polyglot programmer-friendly](http://radar.oreilly.com/2013/11/polyglot-programming-what-is-it-and-why-should-you-be-using-it.html), and not burdensome to use.
+
+After getting a couple of starter projects created, I next set out to start writing some documentation around how to use them.  Writing good technical documentation has it's own unique set of challenges (which I won't get into here). As I started organizing my thoughts around what to write, I asked myself if writing a bunch of documentation was really worth the effort?  I mean, regardless of my efforts in writing quality documentation, there would be a segment of my target audience that would either not uderstand what I wrote or would not even bother reading it. 
+
+So it occured to me that maybe I should consider a different approach. What if I could automate a large portion of the workflow?  How much documentation would I need to write if the prescribed workflow was baked into a small, easily accessible app?
+
+To be continued...
+
 ## Usage
+HSC is written in Go and the plan is to cross-compile to run on Linux, Windows, and OS X.  As a command line application, its workflow is implemented as a collection of sub-commands:     
 
 **init**: First time installing HSC   
-**new**: Create a new project   
+**new**: Start a new project   
 **fork**: Collaborate on an existing project   
 **issues**: Manage project ideas, features, stories, and bugs   
 **version**: Display version of your local HSC install   
@@ -25,7 +35,7 @@ Let's explore each of the sub-commands.
 This sub-command initializes a user's local installation with necessary configuration to streamline processing.  Storing a configuation locally will also eliminate the need to query for input that may be redundant across sub-commands.  GitHub repository information would be one example of the type of data that may be redundant across sub-commands.
 
 ##### New
-This sub-command creates a new project for a user.  The user would be able to select from a list of pre-defined starter projects ideally implemented in multiple languages.  A good example would be the customary "hello world" application implemented as a [microservice](http://martinfowler.com/articles/microservices.html).
+This sub-command creates a new project for a user.  The user would be able to select from a list of pre-defined starter projects ideally implemented in multiple languages.  A good example would be the customary "hello world" application implemented as a [microservice](http://martinfowler.com/articles/microservices.html).  
 
 ##### Fork
 If you find an existing project you'd like to contribute to, this is the sub-command for you.  
