@@ -16,6 +16,11 @@ So it occured to me that maybe I should consider a different approach. What if I
 
 Let the experiment begin...
 
+## Concepts
+* The workflow is very much centered around using [Git](http://git-scm.com/) and at least initially, GitHub.  So much of what HSC sets out to accomplish is around automating tasks around managing GitHub repositories, their issues, teams, collaborators, etc. etc.   
+* HSC was conceived to support engineers collaborating within a [GitHub Organization](https://github.com/blog/674-introducing-organizations).  But since the GitHub [API](https://developer.github.com/v3/) obviously supports both individual and organization account types, then HSC should as well.
+* Even if I could automate everything you need to do with Git, I'm not sure I'd want to.  So bottom line, you need a basic understanding of version control software and in particular, Git.  Quite frankly I don't think that's too much to ask.   
+
 ## Usage
 HSC is written in Go and the plan is to cross-compile to run on Linux, Windows, and OS X.  As a command line application, its workflow is implemented as a collection of sub-commands:     
 
