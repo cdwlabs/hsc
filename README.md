@@ -14,7 +14,7 @@ After getting a couple of starter projects created, I next set out to start writ
 
 So it occured to me that maybe I should consider a different approach. What if I could automate a large portion of the workflow?  How much documentation would I need to write if the prescribed workflow was baked into a small, easily accessible app?
 
-To be continued...
+Let the experiment begin...
 
 ## Usage
 HSC is written in Go and the plan is to cross-compile to run on Linux, Windows, and OS X.  As a command line application, its workflow is implemented as a collection of sub-commands:     
