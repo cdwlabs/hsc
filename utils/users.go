@@ -1,9 +1,6 @@
 package utils
 
-import (
-	"github.com/google/go-github/github"
-	"github.com/pinterb/hsc/config"
-)
+import "github.com/google/go-github/github"
 
 // UserUtils handles activities around managing users in a development workflow.
 // This could include things like:
@@ -11,16 +8,7 @@ import (
 //    Note: GitHub API docs: http://developer.github.com/v3/users/
 //
 type UserUtils struct {
-	config *config.Config
-	client *github.Client
-}
-
-// NewUserUtils creates a new instance of UserUtils
-func NewUserUtils(config *config.Config) *UserUtils {
-
-	client := github.NewClient(config.HTTPClient())
-	u := &UserUtils{config: config, client: client}
-	return u
+	*Utils
 }
 
 // GetGitHubUser fetches a repository user.  Passing the empty string will fetch the authenticated
@@ -28,6 +16,7 @@ func NewUserUtils(config *config.Config) *UserUtils {
 // TODO: This should provide generic return values (Not, the go-github structs)
 func (ut *UserUtils) GetGitHubUser(user string) (*github.User, *github.Response, error) {
 
+	//u, resp, err := ut.client.client.Users.Get(user)
 	u, resp, err := ut.client.Users.Get(user)
 	if err != nil {
 		return nil, resp, err
@@ -40,7 +29,7 @@ func (ut *UserUtils) GetGitHubUser(user string) (*github.User, *github.Response,
 func (ut *UserUtils) IsGitHubUser(user string) (bool, error) {
 
 	_, resp, err := ut.GetGitHubUser(user)
-	if err != nil {
+	if err != nil && resp.StatusCode != 404 {
 		return false, err
 	}
 

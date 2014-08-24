@@ -1,17 +1,15 @@
 package utils
 
 import (
-	"net/http"
-
 	"code.google.com/p/goauth2/oauth"
+	"github.com/google/go-github/github"
 	"github.com/pinterb/hsc/config"
 )
 
-// Client manages interactions with all utilities
-type Client struct {
-	//github *github.Client
+// Utils manages interactions with all utilities
+type Utils struct {
+	client *github.Client
 	config *config.Config
-	client *http.Client
 
 	Users *UserUtils
 	//	Teams         *TeamUtils
@@ -19,15 +17,16 @@ type Client struct {
 	//	Organizations *OrganizationUtils
 }
 
-func NewClient(config *config.Config) *Client {
+// NewUtils creates an instance of Utils
+func NewUtils(config *config.Config) *Utils {
 
 	t := &oauth.Transport{
 		Token: &oauth.Token{AccessToken: config.Token},
 	}
 
-	httpClient := t.Client()
-	c := &Client{config: config, client: httpClient}
-	c.Users = &UserUtils{config: config}
+	client := github.NewClient(t.Client())
+	u := &Utils{config: config, client: client}
+	u.Users = &UserUtils{Utils: u}
 
-	return c
+	return u
 }
