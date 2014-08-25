@@ -8,7 +8,7 @@ const Version = "0.0.1"
 
 // Borrowed this idea from HashiCorp guys.  A pre-release marker for the version.  If this is "" (empty string)
 // then it means that it is a final release.  Otherwise, this is a pre-release such as "dev", "beta", "rc1", etc.
-const VersionPrelease = "dev"
+const VersionPrerelease = "dev"
 
 // Use this to determine if an upgrade breaks backwards compatibility.  If this is "" (empty string)
 // then it means that this version is backwards compatible.  Otherwise, this is the Version that breaks.

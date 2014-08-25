@@ -16,6 +16,7 @@ import (
 	"net/http"
 
 	"code.google.com/p/goauth2/oauth"
+	"github.com/google/go-github/github"
 )
 
 // ConfigPathEnvVar identifies the environment variable that overrides the default location (i.e. user's home directory) of the HSC configuration file.
@@ -130,25 +131,45 @@ func (c *Config) Validate() error {
 	}
 
 	if c.Dir == "" {
-		errors = append(errors, fmt.Errorf("config: dir is required"))
+		errors = append(errors, fmt.Errorf("dir is required."))
 	} else if _, err := os.Stat(c.Dir); os.IsNotExist(err) {
-		errors = append(errors, fmt.Errorf("config: dir '%s' does not exist", c.Dir))
+		errors = append(errors, fmt.Errorf("dir '%s' does not exist", c.Dir))
 	}
 
 	if c.Token == "" {
-		errors = append(errors, fmt.Errorf("config: a GitHub oauth token is required. Goto https://github.com/blog/1509-personal-api-tokens to learn about tokens"))
+		errors = append(errors, fmt.Errorf("a GitHub oauth token is required. Goto https://github.com/blog/1509-personal-api-tokens to learn about tokens"))
+		// Make sure token is invalid so authentication fails
+		c.Token = "111222333444aaabbbcccdddeee"
 	}
 
+	// get a GitHub client to use for validation against GitHub API
+	client := c.GitHubClient()
+
+	bUserValid := false
 	if c.User == "" {
-		errors = append(errors, fmt.Errorf("config: a user is required. This should be your GitHub username"))
-		//	} else if _, err := ghutil.User(c.User); ghutil.IsNotExist(err) {
-		//		errors = append(errors, fmt.Errorf("config: user '%s' does not exist in GitHub", c.User))
+		errors = append(errors, fmt.Errorf("a user is required. This should be your GitHub username"))
+	} else if u, resp, err := c.validGitHubUser(client); err != nil {
+		errors = append(errors, fmt.Errorf("fatal!!!: validating user against GitHub resulted in error: %s", err.Error()))
+	} else if resp.StatusCode == 401 {
+		errors = append(errors, fmt.Errorf("unable to authenticate against GitHub using the oauth token provided."))
+	} else if *u.Login != c.User && *u.Email != c.User {
+		errors = append(errors, fmt.Errorf("username provided does not match GitHub login or email associated with your authenicated user."))
+	} else {
+		bUserValid = true
 	}
 
 	if c.Org != "" {
-		//		if _, err := ghutil.Org(c.Org); ghutil.IsNotExist(err) {
-		//			errors = append(errors, fmt.Errorf("config: org '%s' does not exist in GitHub", c.Org))
-		//		}
+		if _, resp, err := c.validGitHubOrg(client); err != nil {
+			errors = append(errors, fmt.Errorf("fatal!!!: validating org against GitHub resulted in error: %s", err.Error()))
+		} else if resp.StatusCode == 404 {
+			errors = append(errors, fmt.Errorf("org does not exist on GitHub."))
+		} else if bUserValid {
+			if ok, _, err := c.isGitHubOrgMember(client); err != nil {
+				errors = append(errors, fmt.Errorf("fatal!!!: validating user's org membership against GitHub resulted in error: %s", err.Error()))
+			} else if !ok {
+				errors = append(errors, fmt.Errorf("user is not a member of the organization provided. Contact GitHub organization owner to have yourself added to organization before re-trying this command."))
+			}
+		}
 	}
 
 	if len(errors) > 0 {
@@ -158,13 +179,45 @@ func (c *Config) Validate() error {
 	return nil
 }
 
+func (c *Config) validGitHubUser(client *github.Client) (*github.User, *github.Response, error) {
+	u, resp, err := client.Users.Get("")
+	if err != nil && resp.StatusCode != 401 {
+		return nil, nil, err
+	}
+
+	return u, resp, nil
+}
+
+func (c *Config) validGitHubOrg(client *github.Client) (*github.Organization, *github.Response, error) {
+	o, resp, err := client.Organizations.Get(c.Org)
+	if err != nil && resp.StatusCode != 404 {
+		return nil, nil, err
+	}
+
+	return o, resp, nil
+}
+
+func (c *Config) isGitHubOrgMember(client *github.Client) (bool, *github.Response, error) {
+	o, resp, err := client.Organizations.IsMember(c.Org, c.User)
+	if err != nil && resp.StatusCode != 404 {
+		return false, nil, err
+	}
+
+	return o, resp, nil
+}
+
 func getField(c *Config, field string) string {
 	r := reflect.ValueOf(c)
 	f := reflect.Indirect(r).FieldByName(field)
 	return string(f.String())
 }
 
-// HTTPClient returns an client built with Token. This client is suitable for OAuth authentication
+// GitHubClient returns a GitHub build with Token.
+func (c *Config) GitHubClient() *github.Client {
+	return github.NewClient(c.HTTPClient())
+}
+
+// HTTPClient returns a http client built with Token. This client is suitable for OAuth authentication
 func (c *Config) HTTPClient() *http.Client {
 
 	t := &oauth.Transport{

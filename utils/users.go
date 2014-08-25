@@ -25,7 +25,7 @@ func (ut *UserUtils) GetGitHubUser(user string) (*github.User, *github.Response,
 	return u, resp, nil
 }
 
-// IsGitHubUser is a convenience method for determining if user is a valid GitHub user.
+// IsGitHubUser is a convenience method for determining if any user is a valid GitHub user.
 func (ut *UserUtils) IsGitHubUser(user string) (bool, error) {
 
 	_, resp, err := ut.GetGitHubUser(user)
@@ -38,4 +38,21 @@ func (ut *UserUtils) IsGitHubUser(user string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// IsAuthenticatedGitHubUser validates a Configs user data.
+func (ut *UserUtils) IsAuthenticatedGitHubUser(c *Config) (*github.User, *github.Response, error) {
+
+	client = github.NewClient(c.HTTPClient())
+	u, resp, err := client.Users.Get(c.User)
+	if err != nil && resp.StatusCode != 404 {
+		return false, err
+	}
+
+	if resp.StatusCode != 200 {
+		return false, nil
+	}
+
+	return true, nil
+
 }

@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"time"
 
+	"github.com/mitchellh/cli"
 	"github.com/visionmedia/go-spin"
 )
 
@@ -13,8 +16,8 @@ func main() {
 }
 
 func realMain() int {
+	log.SetOutput(ioutil.Discard)
 	s := spin.New()
-
 	show(s, "Default", spin.Default)
 
 	//	show(s, "Box1", spin.Box1)
@@ -35,7 +38,31 @@ func realMain() int {
 	//	show(s, "Spin8", spin.Spin8)
 	//	show(s, "Spin9", spin.Spin9)
 
-	return 0
+	// If command line args include "--version" or "-v"; then just show the version.
+	args := os.Args[1:]
+	for _, arg := range args {
+		if arg == "-v" || arg == "--version" {
+			newArgs := make([]string, len(args)+1)
+			newArgs[0] = "version"
+			copy(newArgs[1:], args)
+			args = newArgs
+			break
+		}
+	}
+
+	cli := &cli.CLI{
+		Args:     args,
+		Commands: Commands,
+		HelpFunc: cli.BasicHelpFunc("hsc"),
+	}
+
+	exitCode, err := cli.Run()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error executing CLI: %s\n", err.Error())
+		return 1
+	}
+
+	return exitCode
 }
 
 func show(s *spin.Spinner, name, frames string) {

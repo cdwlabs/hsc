@@ -221,13 +221,101 @@ func TestWriteBadDir(t *testing.T) {
 	}
 }
 
+func TestBadToken(t *testing.T) {
+
+	dir := fixturePath(t, "")
+	os.Setenv(ConfigPathEnvVar, dir)
+
+	c := &Config{
+		User:  "xyzincuser",
+		Dir:   "/tmp",
+		Token: "L2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
+	}
+
+	expected := "unable to authenticate against GitHub using the oauth token provided"
+
+	if err := c.Validate(); err == nil {
+		t.Fatalf("fail: expecting a %s error", "non-nil")
+	} else if !strings.Contains(err.Error(), expected) {
+		t.Fatalf("fail: error should include '%s'", expected)
+	}
+}
+
+func TestBadUserName(t *testing.T) {
+
+	dir := fixturePath(t, "")
+	os.Setenv(ConfigPathEnvVar, dir)
+
+	c := &Config{
+		User:  "xxxxyzincuser",
+		Dir:   "/tmp",
+		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
+	}
+
+	expected := "username provided does not match GitHub login or email associated with your authenicated user"
+
+	if err := c.Validate(); err == nil {
+		t.Fatalf("fail: expecting a %s error", "non-nil")
+	} else if !strings.Contains(err.Error(), expected) {
+		t.Fatalf("fail: error should include '%s'", expected)
+	}
+}
+
+func TestBadOrg(t *testing.T) {
+
+	dir := fixturePath(t, "")
+	os.Setenv(ConfigPathEnvVar, dir)
+
+	c := &Config{
+		Org:   "XXXXXXXXXYZCorp",
+		User:  "xyzincuser",
+		Dir:   "/tmp",
+		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
+	}
+
+	expected := "org does not exist on GitHub"
+
+	if err := c.Validate(); err == nil {
+		t.Fatalf("fail: expecting a %s error", "non-nil")
+	} else if !strings.Contains(err.Error(), expected) {
+		t.Fatalf("fail: error should include '%s'", expected)
+	}
+}
+
+func TestNotOrgMember(t *testing.T) {
+
+	dir := fixturePath(t, "")
+	os.Setenv(ConfigPathEnvVar, dir)
+
+	c := &Config{
+		Org:   "XYZCorp",
+		User:  "xyzincuser",
+		Dir:   "/tmp",
+		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
+	}
+
+	expected := "user is not a member of the organization provided"
+
+	if err := c.Validate(); err == nil {
+		t.Fatalf("fail: expecting a %s error", "non-nil")
+	} else if !strings.Contains(err.Error(), expected) {
+		t.Fatalf("fail: error should include '%s'", expected)
+	}
+}
+
 func TestWritGood(t *testing.T) {
 
 	dir := fixturePath(t, "")
 	os.Setenv(ConfigPathEnvVar, dir)
 
-	c := &Config{Org: "XYZCorp", User: "bob", Dir: "/tmp", Token: "DKFK"}
-	expected := &Config{Org: "XYZCorp", User: "bob", Dir: "/tmp", Token: "DKFK"}
+	c := &Config{
+		Org:   "xyzinc",
+		User:  "xyzincuser",
+		Dir:   "/tmp",
+		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
+	}
+
+	expected := &Config{Org: "xyzinc", User: "xyzincuser", Dir: "/tmp", Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317"}
 
 	if err := WriteConfig(c); err != nil {
 		t.Fatalf("fail: %s", err.Error())
@@ -248,8 +336,13 @@ func TestWritNoOrg(t *testing.T) {
 	dir := fixturePath(t, "")
 	os.Setenv(ConfigPathEnvVar, dir)
 
-	c := &Config{User: "bob", Dir: "/tmp", Token: "DKFK"}
-	expected := &Config{User: "bob", Dir: "/tmp", Token: "DKFK"}
+	c := &Config{
+		User:  "xyzincuser",
+		Dir:   "/tmp",
+		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
+	}
+
+	expected := &Config{User: "xyzincuser", Dir: "/tmp", Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317"}
 
 	if err := WriteConfig(c); err != nil {
 		t.Fatalf("fail: %s", err.Error())

@@ -20,11 +20,15 @@ type Utils struct {
 // NewUtils creates an instance of Utils
 func NewUtils(config *config.Config) *Utils {
 
-	t := &oauth.Transport{
-		Token: &oauth.Token{AccessToken: config.Token},
+	client := github.NewClient(nil)
+	if config != nil {
+		t := &oauth.Transport{
+			Token: &oauth.Token{AccessToken: config.Token},
+		}
+
+		client = github.NewClient(t.Client())
 	}
 
-	client := github.NewClient(t.Client())
 	u := &Utils{config: config, client: client}
 	u.Users = &UserUtils{Utils: u}
 
