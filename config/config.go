@@ -19,15 +19,42 @@ import (
 	"github.com/google/go-github/github"
 )
 
-// ConfigPathEnvVar identifies the environment variable that overrides the default location (i.e. user's home directory) of the HSC configuration file.
-const ConfigPathEnvVar = "HSC_CONFIG_HOME"
+const (
+	// ConfigPathEnvVar identifies the environment variable that overrides the default location (i.e. user's home directory) of the HSC configuration file.
+	ConfigPathEnvVar = "HSC_CONFIG_HOME"
 
-// NOTE: This should get moved to ghutils
-// GitHubTokenEnvVar identifies the environment variable that contains a user's GitHub API token.
-const GitHubTokenEnvVar = "GITHUB_TOKEN"
+	// GitHubTokenEnvVar identifies the environment variable that contains a user's GitHub API token.
+	GitHubTokenEnvVar = "GITHUB_TOKEN"
 
-// ConfigFileName is the name of the HSC configuration file.
-const ConfigFileName = ".hsc"
+	// ConfigFileName is the name of the HSC configuration file.
+	ConfigFileName = ".hsc"
+
+	// Validation Error Messages:
+
+	// ErrMissingDir is an error message indicating a Config without a Dir variable
+	ErrMissingDir = "dir is required"
+
+	// ErrDirDoesNotExist is an error message indicating a Config's Dir variable references a directory that does not exist
+	ErrDirDoesNotExist = "directory does not exist"
+
+	// ErrMissingUser is an error message indicating a Config without a User variable
+	ErrMissingUser = "a user is required. This should be your GitHub username"
+
+	// ErrAuthUser is an error message indicating a Config's User cannot be authenticated against GitHub (using Token)
+	ErrAuthUser = "unable to authenticate against GitHub using the oauth token provided"
+
+	// ErrUserMismatch is an error message indicating a Config's User variable does not match data returned from GitHub
+	ErrUserMismatch = "username provided does not match GitHub login or email associated with your authenicated user"
+
+	// ErrMissingToken is an error message indicating a Config without a Token variable
+	ErrMissingToken = "a GitHub oauth token is required. Goto https://github.com/blog/1509-personal-api-tokens to learn about tokens"
+
+	// ErrOrgDoesNotExist is an error message indicating a Config's Org variable references an organization that does not exist on GitHub
+	ErrOrgDoesNotExist = "org does not exist on GitHub"
+
+	// ErrUserNotOrgMember is an error message indicating a Config's User is not a member of the GitHub organization identified by the Org variable
+	ErrUserNotOrgMember = "user is not a member of the organization provided. Contact GitHub organization owner to have yourself added to organization before re-trying this command"
+)
 
 // Config is the configuration for HSC. The idea is to collect (as configuration) any data attributes that tend to be used across sub-commands.
 type Config struct {
@@ -131,13 +158,13 @@ func (c *Config) Validate() error {
 	}
 
 	if c.Dir == "" {
-		errors = append(errors, fmt.Errorf("dir is required."))
+		errors = append(errors, fmt.Errorf(ErrMissingDir))
 	} else if _, err := os.Stat(c.Dir); os.IsNotExist(err) {
-		errors = append(errors, fmt.Errorf("dir '%s' does not exist", c.Dir))
+		errors = append(errors, fmt.Errorf(ErrDirDoesNotExist))
 	}
 
 	if c.Token == "" {
-		errors = append(errors, fmt.Errorf("a GitHub oauth token is required. Goto https://github.com/blog/1509-personal-api-tokens to learn about tokens"))
+		errors = append(errors, fmt.Errorf(ErrMissingToken))
 		// Make sure token is invalid so authentication fails
 		c.Token = "111222333444aaabbbcccdddeee"
 	}
@@ -147,13 +174,13 @@ func (c *Config) Validate() error {
 
 	bUserValid := false
 	if c.User == "" {
-		errors = append(errors, fmt.Errorf("a user is required. This should be your GitHub username"))
+		errors = append(errors, fmt.Errorf(ErrMissingUser))
 	} else if u, resp, err := c.validGitHubUser(client); err != nil {
 		errors = append(errors, fmt.Errorf("fatal!!!: validating user against GitHub resulted in error: %s", err.Error()))
 	} else if resp.StatusCode == 401 {
-		errors = append(errors, fmt.Errorf("unable to authenticate against GitHub using the oauth token provided."))
+		errors = append(errors, fmt.Errorf(ErrAuthUser))
 	} else if *u.Login != c.User && *u.Email != c.User {
-		errors = append(errors, fmt.Errorf("username provided does not match GitHub login or email associated with your authenicated user."))
+		errors = append(errors, fmt.Errorf(ErrUserMismatch))
 	} else {
 		bUserValid = true
 	}
@@ -162,12 +189,12 @@ func (c *Config) Validate() error {
 		if _, resp, err := c.validGitHubOrg(client); err != nil {
 			errors = append(errors, fmt.Errorf("fatal!!!: validating org against GitHub resulted in error: %s", err.Error()))
 		} else if resp.StatusCode == 404 {
-			errors = append(errors, fmt.Errorf("org does not exist on GitHub."))
+			errors = append(errors, fmt.Errorf(ErrOrgDoesNotExist))
 		} else if bUserValid {
 			if ok, _, err := c.isGitHubOrgMember(client); err != nil {
 				errors = append(errors, fmt.Errorf("fatal!!!: validating user's org membership against GitHub resulted in error: %s", err.Error()))
 			} else if !ok {
-				errors = append(errors, fmt.Errorf("user is not a member of the organization provided. Contact GitHub organization owner to have yourself added to organization before re-trying this command."))
+				errors = append(errors, fmt.Errorf(ErrUserNotOrgMember))
 			}
 		}
 	}

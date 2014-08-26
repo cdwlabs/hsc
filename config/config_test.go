@@ -194,30 +194,25 @@ func TestWriteNilConfig(t *testing.T) {
 
 func TestWriteEmptyConfig(t *testing.T) {
 
-	expectedDir := "dir is required"
-	expectedUser := "user is required"
-	expectedToken := "oauth token is required"
-
 	c := &Config{}
 	if err := WriteConfig(c); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
-	} else if !strings.Contains(err.Error(), expectedDir) {
-		t.Fatalf("fail: error should include '%s'", expectedDir)
-	} else if !strings.Contains(err.Error(), expectedUser) {
-		t.Fatalf("fail: error should include '%s'", expectedUser)
-	} else if !strings.Contains(err.Error(), expectedToken) {
-		t.Fatalf("fail: error should include '%s'", expectedToken)
+	} else if !strings.Contains(err.Error(), ErrMissingDir) {
+		t.Fatalf("fail: error should include '%s'", ErrMissingDir)
+	} else if !strings.Contains(err.Error(), ErrMissingUser) {
+		t.Fatalf("fail: error should include '%s'", ErrMissingUser)
+	} else if !strings.Contains(err.Error(), ErrMissingToken) {
+		t.Fatalf("fail: error should include '%s'", ErrMissingToken)
 	}
 }
 
 func TestWriteBadDir(t *testing.T) {
-	expectedDir := "dir '/tmpp' does not exist"
 	c := &Config{User: "bob", Dir: "/tmpp", Token: "DKFK"}
 
 	if err := WriteConfig(c); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
-	} else if !strings.Contains(err.Error(), expectedDir) {
-		t.Fatalf("fail: error should include '%s'", expectedDir)
+	} else if !strings.Contains(err.Error(), ErrDirDoesNotExist) {
+		t.Fatalf("fail: error should include '%s'", ErrDirDoesNotExist)
 	}
 }
 
@@ -232,12 +227,10 @@ func TestBadToken(t *testing.T) {
 		Token: "L2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
 	}
 
-	expected := "unable to authenticate against GitHub using the oauth token provided"
-
 	if err := c.Validate(); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
-	} else if !strings.Contains(err.Error(), expected) {
-		t.Fatalf("fail: error should include '%s'", expected)
+	} else if !strings.Contains(err.Error(), ErrAuthUser) {
+		t.Fatalf("fail: error should include '%s'", ErrAuthUser)
 	}
 }
 
@@ -252,12 +245,10 @@ func TestBadUserName(t *testing.T) {
 		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
 	}
 
-	expected := "username provided does not match GitHub login or email associated with your authenicated user"
-
 	if err := c.Validate(); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
-	} else if !strings.Contains(err.Error(), expected) {
-		t.Fatalf("fail: error should include '%s'", expected)
+	} else if !strings.Contains(err.Error(), ErrUserMismatch) {
+		t.Fatalf("fail: error should include '%s'", ErrUserMismatch)
 	}
 }
 
@@ -273,12 +264,10 @@ func TestBadOrg(t *testing.T) {
 		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
 	}
 
-	expected := "org does not exist on GitHub"
-
 	if err := c.Validate(); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
-	} else if !strings.Contains(err.Error(), expected) {
-		t.Fatalf("fail: error should include '%s'", expected)
+	} else if !strings.Contains(err.Error(), ErrOrgDoesNotExist) {
+		t.Fatalf("fail: error should include '%s'", ErrOrgDoesNotExist)
 	}
 }
 
@@ -294,14 +283,15 @@ func TestNotOrgMember(t *testing.T) {
 		Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317",
 	}
 
-	expected := "user is not a member of the organization provided"
-
 	if err := c.Validate(); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
-	} else if !strings.Contains(err.Error(), expected) {
-		t.Fatalf("fail: error should include '%s'", expected)
+	} else if !strings.Contains(err.Error(), ErrUserNotOrgMember) {
+		t.Fatalf("fail: error should include '%s'", ErrUserNotOrgMember)
 	}
 }
+
+/*
+To Do: Determine if Config should allow an Org even if User is NOT a member of org...
 
 func TestWritGood(t *testing.T) {
 
@@ -330,6 +320,7 @@ func TestWritGood(t *testing.T) {
 		t.Fatalf("bad: %#v", out)
 	}
 }
+*/
 
 func TestWritNoOrg(t *testing.T) {
 
