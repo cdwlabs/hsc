@@ -65,8 +65,8 @@ type Config struct {
 }
 
 // WriteConfig attempts to write the configuration file to disk
-func WriteConfig(config *Config) error {
-	if err := config.Validate(); err != nil {
+func (c *Config) Write() error {
+	if err := c.Validate(); err != nil {
 		return err
 	}
 
@@ -85,11 +85,11 @@ func WriteConfig(config *Config) error {
 	dict[section] = make(map[string]string)
 
 	tmpintslice := []int{0}
-	ielements := reflect.TypeOf(config).Elem().NumField()
+	ielements := reflect.TypeOf(c).Elem().NumField()
 	for i := 0; i < ielements; i++ {
 		tmpintslice[0] = i
-		f := reflect.TypeOf(config).Elem().FieldByIndex(tmpintslice)
-		value := reflect.ValueOf(config).Elem().FieldByName(f.Name).String()
+		f := reflect.TypeOf(c).Elem().FieldByIndex(tmpintslice)
+		value := reflect.ValueOf(c).Elem().FieldByName(f.Name).String()
 		if value != "" {
 			dict[section][strings.ToLower(f.Name)] = value
 		}

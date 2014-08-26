@@ -47,42 +47,43 @@ func init() {
 				UI:    ui,
 			}, nil
 		},
+		/*
 
-		"new": func() (cli.Command, error) {
-			return &command.NewCommand{
-				Utils: utils,
-				UI:    ui,
-			}, nil
-		},
+			"new": func() (cli.Command, error) {
+				return &command.NewCommand{
+					Utils: utils,
+					UI:    ui,
+				}, nil
+			},
 
-		"fork": func() (cli.Command, error) {
-			return &command.ForkCommand{
-				Utils: utils,
-				UI:    ui,
-			}, nil
-		},
+				"fork": func() (cli.Command, error) {
+					return &command.ForkCommand{
+						Utils: utils,
+						UI:    ui,
+					}, nil
+				},
 
-		"issues": func() (cli.Command, error) {
-			return &command.IssuesCommand{
-				Utils: utils,
-				UI:    ui,
-			}, nil
-		},
+				"issues": func() (cli.Command, error) {
+					return &command.IssuesCommand{
+						Utils: utils,
+						UI:    ui,
+					}, nil
+				},
 
-		"check": func() (cli.Command, error) {
-			return &command.CheckCommand{
-				Utils: utils,
-				UI:    ui,
-			}, nil
-		},
+				"check": func() (cli.Command, error) {
+					return &command.CheckCommand{
+						Utils: utils,
+						UI:    ui,
+					}, nil
+				},
 
-		"download": func() (cli.Command, error) {
-			return &command.DownloadCommand{
-				Utils: utils,
-				UI:    ui,
-			}, nil
-		},
-
+				"download": func() (cli.Command, error) {
+					return &command.DownloadCommand{
+						Utils: utils,
+						UI:    ui,
+					}, nil
+				},
+		*/
 		"version": func() (cli.Command, error) {
 			return &command.VersionCommand{
 				Revision:                   GitCommit,

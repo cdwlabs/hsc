@@ -39,20 +39,3 @@ func (ut *UserUtils) IsGitHubUser(user string) (bool, error) {
 
 	return true, nil
 }
-
-// IsAuthenticatedGitHubUser validates a Configs user data.
-func (ut *UserUtils) IsAuthenticatedGitHubUser(c *Config) (*github.User, *github.Response, error) {
-
-	client = github.NewClient(c.HTTPClient())
-	u, resp, err := client.Users.Get(c.User)
-	if err != nil && resp.StatusCode != 404 {
-		return false, err
-	}
-
-	if resp.StatusCode != 200 {
-		return false, nil
-	}
-
-	return true, nil
-
-}

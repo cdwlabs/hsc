@@ -185,17 +185,10 @@ func TestLoadUserDir(t *testing.T) {
 	}
 }
 
-func TestWriteNilConfig(t *testing.T) {
-
-	if err := WriteConfig(nil); err == nil {
-		t.Fatalf("fail: expecting a %s error", "non-nil")
-	}
-}
-
 func TestWriteEmptyConfig(t *testing.T) {
 
 	c := &Config{}
-	if err := WriteConfig(c); err == nil {
+	if err := c.Write(); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
 	} else if !strings.Contains(err.Error(), ErrMissingDir) {
 		t.Fatalf("fail: error should include '%s'", ErrMissingDir)
@@ -209,7 +202,7 @@ func TestWriteEmptyConfig(t *testing.T) {
 func TestWriteBadDir(t *testing.T) {
 	c := &Config{User: "bob", Dir: "/tmpp", Token: "DKFK"}
 
-	if err := WriteConfig(c); err == nil {
+	if err := c.Write(); err == nil {
 		t.Fatalf("fail: expecting a %s error", "non-nil")
 	} else if !strings.Contains(err.Error(), ErrDirDoesNotExist) {
 		t.Fatalf("fail: error should include '%s'", ErrDirDoesNotExist)
@@ -335,7 +328,7 @@ func TestWritNoOrg(t *testing.T) {
 
 	expected := &Config{User: "xyzincuser", Dir: "/tmp", Token: "2167c2a84fa7e09d4304aa005f6cb5e51f93d317"}
 
-	if err := WriteConfig(c); err != nil {
+	if err := c.Write(); err != nil {
 		t.Fatalf("fail: %s", err.Error())
 	}
 

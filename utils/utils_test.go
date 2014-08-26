@@ -9,7 +9,7 @@ import (
 func TestNilConfig(t *testing.T) {
 	utils := NewUtils(nil)
 	if utils == nil {
-		t.Fatal("fail: Creating a Utils instance with nil Config should not fail."
+		t.Fatal("fail: Creating a Utils instance with nil Config should not fail.")
 	}
 }
 

@@ -17,8 +17,8 @@ func main() {
 
 func realMain() int {
 	log.SetOutput(ioutil.Discard)
-	s := spin.New()
-	show(s, "Default", spin.Default)
+	//	s := spin.New()
+	//	show(s, "Default", spin.Default)
 
 	//	show(s, "Box1", spin.Box1)
 	//	show(s, "Box2", spin.Box2)
