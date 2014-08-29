@@ -26,11 +26,15 @@ Usage: hsc init [options]
   
 Options:
 
-  -user=repouser      Your GitHub username.  
-  -org=repoowner      The owner of the GitHub repository.  Only required when different than repository username (e.g. you're working with an organization's GitHub repo).  
-  -token=repotoken    Either the value of your GitHub API token or "GITHUB_TOKEN" -- which is the env. variable containing your token.  
-  -dir=pathinfo       The local directory that will be home to the working copies of your projects (i.e. cloned repositories).  
-  -force              Force the re-initialization of the HSC installation.  
+  -user=repouser        Your GitHub username.  
+
+  -org=repoowner        The owner of the GitHub repository.  Only required when different than repository username (e.g. you're working with an organization's GitHub repo).  
+
+  -token=repotoken      Either the value of your GitHub API token or "GITHUB_TOKEN" -- which is the env. variable containing your token.  
+
+  -dir=pathinfo         The local directory that will be home to the working copies of your projects (i.e. cloned repositories).  
+
+  -force                Force the re-initialization of the HSC installation.  
  
 `
 	return strings.TrimSpace(helpText)

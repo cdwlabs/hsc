@@ -43,5 +43,5 @@ func (c *VersionCommand) Run(_ []string) int {
 
 // Synopsis prints a brief description of the sub-command.
 func (c *VersionCommand) Synopsis() string {
-	return "Prints the HSC version"
+	return "Prints the HSC version."
 }

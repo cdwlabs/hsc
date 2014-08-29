@@ -34,14 +34,20 @@ Options:
                                  white space works best -- as this may also become
                                  the GitHub repository name.
 
-  -desc=project description      A brief description of the project. 
+  -desc=project description      A brief description of the project.  
+                                 This option is only used when creating a new repository
+                                 in GitHub. Also, not permitted with fork option.  
 
   -type=application type         The type of application you're creating (e.g. web,
                                  command line, or microservice api).
                                  Choose from one of the following: api | cli | web
+                                 This option is only used when creating a new repository
+                                 in GitHub. Also, not permitted with fork option. 
 
-  -lang=programmng lanague       Choose from one of these programming langauges:
+  -lang=programmng language      Choose from one of these programming languages:
                                  perl | python | ruby | java | golang
+                                 This option is only used when creating a new repository
+                                 in GitHub. Also, not permitted with fork option. 
 
   -github                        This starts your project by first creating a GitHub
                                  repository and then cloning from it.  Otherwise
@@ -61,40 +67,40 @@ Options:
 
 // Run executes the actual sub-command. Specifically, prints the version of HSC.
 func (c *NewCommand) Run(args []string) int {
-	var projectPath, repoUser, repoOwner, repoApiToken string
-	var force bool
+	var projectName, projectDesc, appType, appLang, ghTeam string
+	var createInGH, forkFromGH bool
 
-	cmdFlags := flag.NewFlagSet("init", flag.ContinueOnError)
-	cmdFlags.StringVar(&repoUser, "user", "", "user")
-	cmdFlags.StringVar(&repoOwner, "org", "", "org")
-	cmdFlags.StringVar(&projectPath, "dir", "", "dir")
-	cmdFlags.StringVar(&repoApiToken, "token", "", "token")
-	cmdFlags.BoolVar(&force, "force", false, "force")
+	cmdFlags := flag.NewFlagSet("new", flag.ContinueOnError)
+	cmdFlags.StringVar(&projectName, "name", "", "name")
+	cmdFlags.StringVar(&projectDesc, "desc", "", "desc")
+	cmdFlags.StringVar(&appType, "type", "", "type")
+	cmdFlags.StringVar(&appLang, "lang", "", "lang")
+	cmdFlags.StringVar(&ghTeam, "team", "", "team")
+	cmdFlags.BoolVar(&forkFromGH, "fork", false, "fork")
+	cmdFlags.BoolVar(&createInGH, "github", false, "github")
 	cmdFlags.Usage = func() { c.UI.Output(c.Help()) }
 	if err := cmdFlags.Parse(args); err != nil {
 		return 1
 	}
 
 	args = cmdFlags.Args()
-	if len(args) > 5 {
-		c.UI.Error(
-			"The init command expects at most five arguments to initialize the HSC installation.")
+	ourConfig, err := config.LoadConfig()
+	if err != nil {
+		c.UI.Error(err.Error())
+		return 1
+	}
+
+	if ourConfig != nil {
+		c.UI.Error("HSC has not yet been initialized.  Use the init command to initialize your HSC installation.\n")
 		cmdFlags.Usage()
 		return 1
 	}
 
-	if !force {
-		oldConfig, err := config.LoadConfig()
-		if err != nil {
-			c.UI.Error(err.Error())
-			return 1
-		}
-
-		if oldConfig != nil {
-			c.UI.Error("HSC has already been initialized.  Use the -force flag if you'd like to re-initialize.\n")
-			cmdFlags.Usage()
-			return 1
-		}
+	if len(args) > 6 {
+		c.UI.Error(
+			"The new command expects at most six arguments to start a new project.")
+		cmdFlags.Usage()
+		return 1
 	}
 
 	newConfig := &config.Config{
