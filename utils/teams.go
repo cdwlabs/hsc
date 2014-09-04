@@ -11,37 +11,57 @@ type TeamUtils struct {
 	*Utils
 }
 
+// Team represents a team within a GitHub organization.  Teams are used to
+// manage access to an organization's repositories.
+//
+// This is just a thin wrapper around the go-github Team struct
+type Team struct {
+	*github.Team
+}
+
+// NewTeam creates a new instance of Team
+func NewTeam(t *github.Team) *Team {
+	team := &Team{Team: t}
+	return team
+}
+
 // ListTeams lists all of the teams for an organization.
-func (tt *TeamUtils) ListTeams(org string, opt *github.ListOptions) ([]github.Team, *github.Response, error) {
+func (tt *TeamUtils) ListTeams(org string, opt *github.ListOptions) ([]github.Team, *Response, error) {
 
 	teamout, resp, err := tt.client.Organizations.ListTeams(org, opt)
 	if err != nil {
-		return nil, resp, err
+		respinfo := NewResponse(resp)
+		return nil, respinfo, err
 	}
 
-	return teamout, resp, nil
+	respinfo := NewResponse(resp)
+	return teamout, respinfo, nil
 }
 
 // GetTeam fetches a team by ID.
-func (tt *TeamUtils) GetTeam(team int) (*github.Team, *github.Response, error) {
+func (tt *TeamUtils) GetTeam(team int) (*github.Team, *Response, error) {
 
 	teamout, resp, err := tt.client.Organizations.GetTeam(team)
 	if err != nil {
-		return nil, resp, err
+		respinfo := NewResponse(resp)
+		return nil, respinfo, err
 	}
 
-	return teamout, resp, nil
+	respinfo := NewResponse(resp)
+	return teamout, respinfo, nil
 }
 
 // CreateTeam creates a new team within an organization.
-func (tt *TeamUtils) CreateTeam(org string, team *github.Team) (*github.Team, *github.Response, error) {
+func (tt *TeamUtils) CreateTeam(org string, team *github.Team) (*github.Team, *Response, error) {
 
 	teamout, resp, err := tt.client.Organizations.CreateTeam(org, team)
 	if err != nil {
-		return nil, resp, err
+		respinfo := NewResponse(resp)
+		return nil, respinfo, err
 	}
 
-	return teamout, resp, nil
+	respinfo := NewResponse(resp)
+	return teamout, respinfo, nil
 }
 
 // EditTeam edits a team.

@@ -11,18 +11,32 @@ type UserUtils struct {
 	*Utils
 }
 
+// User is a simple wrapper around the go-github User struct
+type User struct {
+	*github.User
+}
+
+// NewUser creates a new instance of User
+func NewUser(u *github.User) *User {
+	user := &User{User: u}
+	return user
+}
+
 // GetGitHubUser fetches a repository user.  Passing the empty string will fetch the authenticated
 // user.
 // TODO: This should provide generic return values (Not, the go-github structs)
-func (ut *UserUtils) GetGitHubUser(user string) (*github.User, *github.Response, error) {
+func (ut *UserUtils) GetGitHubUser(user string) (*User, *Response, error) {
 
 	//u, resp, err := ut.client.client.Users.Get(user)
 	u, resp, err := ut.client.Users.Get(user)
 	if err != nil {
-		return nil, resp, err
+		respinfo := NewResponse(resp)
+		return nil, respinfo, err
 	}
 
-	return u, resp, nil
+	respinfo := NewResponse(resp)
+	userinfo := NewUser(u)
+	return userinfo, respinfo, nil
 }
 
 // IsGitHubUser is a convenience method for determining if any user is a valid GitHub user.

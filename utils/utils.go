@@ -17,6 +17,11 @@ type Utils struct {
 	//	Organizations *OrganizationUtils
 }
 
+// Response is a light wrapper around the go-github Response struct
+type Response struct {
+	*github.Response
+}
+
 // NewUtils creates an instance of Utils
 func NewUtils(config *config.Config) *Utils {
 
@@ -33,4 +38,10 @@ func NewUtils(config *config.Config) *Utils {
 	u.Users = &UserUtils{Utils: u}
 
 	return u
+}
+
+// NewResponse creates a new instance of Response
+func NewResponse(r *github.Response) *Response {
+	resp := &Response{Response: r}
+	return resp
 }
