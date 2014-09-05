@@ -19,6 +19,15 @@ import (
 	"github.com/google/go-github/github"
 )
 
+// HSCAdminOrg is GitHub organization that user is operatate against.
+var HSCAdminOrg string
+
+// HSCAdminUser is a user variable required to create a valid config.  Not really used.
+var HSCAdminUser string
+
+// HSCAdminGitHubToken is GitHub API token belonging to a user on the GitHub owner team.
+var HSCAdminGitHubToken string
+
 const (
 	// ConfigPathEnvVar identifies the environment variable that overrides the default location (i.e. user's home directory) of the HSC configuration file.
 	ConfigPathEnvVar = "HSC_CONFIG_HOME"
